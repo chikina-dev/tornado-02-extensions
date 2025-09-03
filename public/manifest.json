@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "モモンガ",
+  "version": "0.1.0",
+  "description": "Collects search logs and sends them to a server.",
+  "permissions": [
+    "tabs",
+    "storage",
+    "history"
+  ],
+  "host_permissions": [
+    "https://tornado2025.chigayuki.com/*"
+  ],
+  "background": {
+    "service_worker": "assets/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "assets/content.js"
+      ]
+    }
+  ]
+}
