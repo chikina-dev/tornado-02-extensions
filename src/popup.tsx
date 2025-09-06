@@ -24,6 +24,7 @@ const Popup = () => {
 
   const [isLoggingEnabled, setIsLoggingEnabled] = useState(true);
   const [filterMode, setFilterMode] = useState<'blacklist'|'whitelist'>('blacklist');
+  const [siteFilterMessage, setSiteFilterMessage] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -69,10 +70,17 @@ const Popup = () => {
 
         if (!ignorePatterns.includes(domainPattern)) {
           await setLocal({ ignorePatterns: [...ignorePatterns, domainPattern] });
-          alert(mode === 'blacklist' ? `${url.hostname} をブラックリストに追加しました。` : `${url.hostname} をホワイトリストに追加しました。`);
+          const msg = mode === 'blacklist' ? `${url.hostname} をブラックリストに追加しました。` : `${url.hostname} をホワイトリストに追加しました。`;
+          setSiteFilterMessage(msg);
+          setTimeout(() => setSiteFilterMessage(null), 2500);
         } else {
-          alert(mode === 'blacklist' ? `${url.hostname} は既にブラックリストに存在します。` : `${url.hostname} は既にホワイトリストに存在します。`);
+          const msg = mode === 'blacklist' ? `${url.hostname} は既にブラックリストに存在します。` : `${url.hostname} は既にホワイトリストに存在します。`;
+          setSiteFilterMessage(msg);
+          setTimeout(() => setSiteFilterMessage(null), 2500);
         }
+        // refresh mode in UI in case it changed elsewhere
+        const after = await getLocal({ filterMode: 'blacklist' });
+        setFilterMode(after.filterMode === 'whitelist' ? 'whitelist' : 'blacklist');
       } catch (e) {
         console.error('無効なURL:', tab.url);
       }
@@ -99,7 +107,10 @@ const Popup = () => {
 
   return (
     <div className="p-4 w-72 bg-primary-950/60 text-slate-100 space-y-4">
-  <h1 className="text-lg font-semibold text-center text-primary-300/90">検索ログコレクター</h1>
+      <div className="flex flex-col items-center gap-2 mt-1">
+        <img src="/viofolio.png" alt="Viofolio" className="w-12 h-12 drop-shadow" />
+        <div className="text-xl font-bold tracking-wide text-primary-200">Viofolio</div>
+      </div>
       
   {renderStatus()}
 
@@ -123,6 +134,9 @@ const Popup = () => {
           <button onClick={handleToggleSiteFilter} className="w-full text-sm text-center py-2 px-4 border border-primary-800/40 rounded-md shadow-sm bg-primary-900/20 hover:bg-primary-800/30 text-slate-100/95 backdrop-blur-sm">
             {filterMode === 'blacklist' ? 'このサイトをブラックリストに追加' : 'このサイトをホワイトリストに追加'}
       </button>
+          {siteFilterMessage && (
+            <div className="mt-2 text-xs text-slate-200/90 text-center">{siteFilterMessage}</div>
+          )}
         </>
       )}
 
@@ -131,8 +145,8 @@ const Popup = () => {
           オプション
         </button>
         {userProfile && (
-          <button onClick={handleLogout} disabled={logoutMutation.isPending} className="flex-1 text-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-white bg-rose-500 hover:bg-rose-400 disabled:bg-slate-500">
-            ログアウト
+          <button onClick={handleLogout} disabled={logoutMutation.isPending} className="flex-1 text-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-white bg-rose-500 hover:bg-rose-400 disabled:bg-slate-500" aria-busy={logoutMutation.isPending}>
+            {logoutMutation.isPending ? 'ログアウト中…' : 'ログアウト'}
           </button>
         )}
       </div>

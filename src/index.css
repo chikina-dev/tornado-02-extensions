@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
-@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -21,7 +20,6 @@
   --color-primary-950: oklch(28.0% 0.11 290);
 }
 @import "tailwindcss";
-@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -145,5 +143,30 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Utilities */
+@layer utilities {
+  .line-clamp-1 {
+    display: -webkit-box;
+    line-clamp: 1;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-2 {
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-3 {
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }

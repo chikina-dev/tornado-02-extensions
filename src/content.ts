@@ -5,8 +5,14 @@ export {};
   const extract = () => {
     const url = location.href;
     const title = document.title;
-    const descNode = document.querySelector('meta[name="description"]');
-    const description = descNode?.getAttribute('content') ?? '';
+    const getMeta = (sel: string) => document.querySelector(sel)?.getAttribute('content') ?? '';
+    // Try multiple description sources: standard, Open Graph, Twitter
+    const descriptionRaw =
+      getMeta('meta[name="description"]') ||
+      getMeta('meta[property="og:description"]') ||
+      getMeta('meta[name="twitter:description"]') ||
+      '';
+    const description = descriptionRaw.replace(/\s+/g, ' ').trim();
     const timestamp = new Date().toISOString();
     return { url, title, description, timestamp };
   };

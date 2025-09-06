@@ -1,8 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "モモンガ",
+  "name": "Viofolio",
   "version": "0.1.0",
   "description": "Collects search logs and sends them to a server.",
+  "icons": {
+    "16": "viofolio.png",
+    "48": "viofolio.png",
+    "128": "viofolio.png"
+  },
   "permissions": [
     "tabs",
     "storage",
@@ -16,7 +21,11 @@
     "type": "module"
   },
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "viofolio.png",
+      "32": "viofolio.png"
+    }
   },
   "options_page": "options.html",
   "content_scripts": [
